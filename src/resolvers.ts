@@ -7,27 +7,9 @@ import {ChatMsg} from './entity/ChatMsg'
 import {BitfinexTick} from './entity/BitfinexTick'
 import {Tweet} from './entity/Tweet'
 import {TwitchMsg} from './entity/TwitchMsg'
+import {HourlySentiment} from './entity/HourlySentiment'
 
-/*
-
-  || Queries ||
-  quote(hour, symbol): quote
-  tick(hour, symbol): tick
-  chatmsg(hour, channelID): chatmsg
-  bitfinextick(hour): bitfinextick
-  tweet(hour,tweetId): tweet
-  hourlytweet(hour): tweet[]
-  twitchmsg(hour): twitchmsg[]
-
-  || Mutations ||
-  newquote(all): boolean
-  newtick(all): boolean
-  newchatmsg(all): boolean
-  newbitfinextick(all): boolean
-  newtweet(all): boolean
-  updatetweet(hour, tweetId, replyCount, retweetCount, favoriteCount): boolean
-
-*/
+/* queries and mutations for db */
 
 export const resolvers: ResolverMap = {
   Query: {
@@ -212,6 +194,20 @@ export const resolvers: ResolverMap = {
       })
       return t
     },
+    twentyfourhoursentiment: async (
+      _,
+      {searchTerm}: GQL.ITwentyfourhoursentimentOnQueryArguments
+    ) => {
+      const t = await HourlySentiment.find({
+        where: {searchTerm: searchTerm},
+        select: ['sentiment', 'searchTerm'],
+        order: {
+          id: 'DESC'
+        },
+        take: 24
+      })
+      return t
+    },
     twitchmsg: async (_, {hour}: GQL.ITwitchmsgOnQueryArguments) => {
       const t = await TwitchMsg.find({
         where: {hour: hour},
@@ -254,6 +250,17 @@ export const resolvers: ResolverMap = {
         askSize
       })
       await quote.save()
+      return true
+    },
+    newhourlysentiment: async (
+      _,
+      {sentiment, searchTerm}: GQL.INewhourlysentimentOnMutationArguments
+    ) => {
+      const hSent = HourlySentiment.create({
+        sentiment,
+        searchTerm
+      })
+      await hSent.save()
       return true
     },
     newtick: async (

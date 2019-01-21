@@ -28,6 +28,7 @@ export namespace GQL {
     chatmsg: Array<IChatMsg | null> | null
     bitfinextick: Array<IBitfinexTick | null> | null
     tweet: Array<ITweet | null> | null
+    twentyfourhoursentiment: Array<IHourlySentiment | null> | null
     hourlytweet: Array<ITweet | null> | null
     tweettenid: Array<ITweet | null> | null
     tweetfiftyid: Array<ITweet | null> | null
@@ -100,6 +101,10 @@ export namespace GQL {
     favoriteCount?: number | null
     polarity?: number | null
     searchTerm?: string | null
+  }
+
+  interface ITwentyfourhoursentimentOnQueryArguments {
+    searchTerm: string
   }
 
   interface IHourlytweetOnQueryArguments {
@@ -189,6 +194,12 @@ export namespace GQL {
     searchTerm: string
   }
 
+  interface IHourlySentiment {
+    __typename: 'HourlySentiment'
+    sentiment: number
+    searchTerm: string
+  }
+
   interface ITwitchMsg {
     __typename: 'TwitchMsg'
     timestamp: string
@@ -201,6 +212,7 @@ export namespace GQL {
   interface IMutation {
     __typename: 'Mutation'
     register: boolean | null
+    newhourlysentiment: boolean | null
     updatetweet: boolean | null
     newquote: boolean | null
     newtick: boolean | null
@@ -213,6 +225,11 @@ export namespace GQL {
   interface IRegisterOnMutationArguments {
     email: string
     password: string
+  }
+
+  interface INewhourlysentimentOnMutationArguments {
+    sentiment: number
+    searchTerm: string
   }
 
   interface IUpdatetweetOnMutationArguments {

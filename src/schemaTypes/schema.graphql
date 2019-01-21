@@ -60,6 +60,7 @@ type Query {
     searchTerm: String
   ): [Tweet]
 
+  twentyfourhoursentiment(searchTerm: String!): [HourlySentiment]
   hourlytweet(currHour: String!, searchTerm: String!): [Tweet]
   tweettenid(searchTerm: String!): [Tweet]
   tweetfiftyid(searchTerm: String!): [Tweet]
@@ -68,6 +69,7 @@ type Query {
 
 type Mutation {
   register(email: String!, password: String!): Boolean
+  newhourlysentiment(sentiment: Float!, searchTerm: String!): Boolean
 
   updatetweet(
     hour: String!
@@ -220,4 +222,9 @@ type TwitchMsg {
   text: String!
   emoji: String!
   channelName: String!
+}
+
+type HourlySentiment {
+  sentiment: Float!
+  searchTerm: String!
 }
